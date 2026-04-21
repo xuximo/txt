@@ -1,0 +1,25 @@
+# 获取当前目录下所有符合三位数字命名的文件夹
+$folders = Get-ChildItem -Directory | Where-Object { $_.Name -match '^\d{3}$' } | ForEach-Object { [int]$_.Name }
+$folders = $folders | Sort-Object
+
+if ($folders.Count -eq 0) {
+    Write-Output "没有找到三位数字命名的文件夹"
+    exit
+}
+
+$min = $folders[0]
+$max = $folders[-1]
+$missing = @()
+
+for ($i = $min; $i -le $max; $i++) {
+    if ($folders -notcontains $i) {
+        $missing += $i
+    }
+}
+
+if ($missing.Count -eq 0) {
+    Write-Output "没有缺失的数字"
+} else {
+    Write-Output "缺失的数字："
+    $missing | ForEach-Object { Write-Output $_.ToString("000") }
+}

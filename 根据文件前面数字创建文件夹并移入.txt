@@ -1,0 +1,12 @@
+Get-ChildItem -Filter "*.png" | ForEach-Object {
+    # 获取文件名前面的数字部分（按“-”分割取第一个，或直接取文件名）
+    $folderName = $_.BaseName.Split('-')[0]
+    
+    # 如果文件夹不存在，则创建
+    if (-not (Test-Path $folderName)) {
+        New-Item -ItemType Directory -Name $folderName
+    }
+    
+    # 移动文件
+    Move-Item $_.FullName -Destination $folderName
+}
